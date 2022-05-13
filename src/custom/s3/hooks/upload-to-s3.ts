@@ -9,11 +9,13 @@ import mongoose from 'mongoose';
 import ffmpeg, { FfprobeData } from 'fluent-ffmpeg';
 import { Readable } from 'stream';
 // const FFPROBE_PATH = require('ffmpeg-static').path;
-const ffmpegPath = process.env.FFMPEG_PATH || require('@ffmpeg-installer/ffmpeg').path;
+const ffmpegPath =
+  process.env.FFMPEG_PATH || require('@ffmpeg-installer/ffmpeg').path;
 ffmpeg.setFfmpegPath(ffmpegPath);
 const FFPROBE_PATH =
   process.env.FFPROBE_PATH || require('@ffprobe-installer/ffprobe').path;
 ffmpeg.setFfprobePath(FFPROBE_PATH);
+console.log(FFPROBE_PATH);
 
 interface PayloadRequestWithFiles extends PayloadRequest {
   files: {
@@ -43,6 +45,7 @@ const getMetaData = async (body: Buffer): Promise<FfprobeData> => {
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(stream as any as string, (err, meta) => {
       if (err) {
+        console.log(err);
         reject(err);
       } else {
         resolve(meta);

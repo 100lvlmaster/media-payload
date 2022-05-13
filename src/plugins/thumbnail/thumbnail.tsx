@@ -6,7 +6,7 @@ import FileGraphic from 'payload/dist/admin/components/graphics/File';
 import useThumbnail from './useThumbnail';
 
 import './thumbnail.scss';
-import { MediaDoc } from '../../../types/media';
+import { MediaDoc } from '../../types/media';
 
 const baseClass = 'thumbnail';
 

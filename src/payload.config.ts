@@ -39,6 +39,17 @@ export default buildConfig({
     // Examples,
   ],
   plugins: [thumbnailPlugin, fileDetailsPlugin, uploadCardPlugin],
+  rateLimit: {
+    window: +process.env.RATE_LIMIT_WINDOW_MS,
+    max: +process.env.RATE_LIMIT_MAX,
+    trustProxy: process.env.RATE_LIMIT_TRUST_PROXY === 'true',
+  },
+  cors: '*',
+  upload: {
+    limits: {
+      fileSize: 25000000,
+    },
+  },
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
   },
