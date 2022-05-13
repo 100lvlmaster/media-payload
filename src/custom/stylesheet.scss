@@ -1,0 +1,123 @@
+@import '~payload/scss';
+
+//////////////////////////////
+// MISC
+//////////////////////////////
+.nav a {
+  padding: 0.5rem 0;
+}
+
+// VideoEmbed.scss
+.video-iframe {
+  margin: auto;
+  max-width: 640px;
+
+  &__container {
+    position: relative;
+    height: 0;
+    padding-bottom: 56.25%;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+  }
+
+  &__iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
+}
+
+.bc__block-header {
+  background: $payloadGray;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  // header's title
+  & > span {
+    font-weight: bold;
+    font-size: 1.1em;
+    flex: 1;
+  }
+}
+
+.bc__block-action,
+.bc__add-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  cursor: pointer;
+  background: transparent;
+  border-radius: 0.25em;
+}
+
+.bc__block-action {
+  padding: 0.5em 1em;
+  border: 0.1em solid transparent;
+  &:hover,
+  &:focus {
+    border-color: currentColor;
+  }
+}
+
+.bc__add-btn {
+  font-size: 0.9em;
+  padding: 0.35em 0.75em;
+  border: none;
+  &:hover,
+  &:focus {
+    background: $payloadGray;
+  }
+}
+
+.upload-gallery {
+  li {
+    @include extra-large {
+      width: 20%;
+    }
+    @include large-break {
+      width: 25%;
+    }
+    @include mid-break {
+      width: 25%;
+    }
+    @include small-break {
+      width: 33%;
+    }
+    @include extra-small-break {
+      width: 50%;
+    }
+    .upload-card__filename {
+      word-wrap: normal;
+    }
+    .upload-card {
+      margin: 0.25 !important;
+    }
+  }
+}
+
+// SelectAdminComponent
+@mixin applyColor($color) {
+  .react-select {
+    .rs__single-value {
+      border-radius: 2rem;
+      padding: 0 1rem;
+      background-color: $color;
+      //   color: white;
+      letter-spacing: 0.02em;
+    }
+  }
+}
+
+.select-admin-component.lightGreen {
+  @include applyColor(#00c65e);
+}
+
+.select-admin-component.lightCoral {
+  @include applyColor(#f58a81);
+}
+
+.select-admin-component.yellow {
+  @include applyColor(#ffbc4b);
+}

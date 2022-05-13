@@ -1,0 +1,26 @@
+@use 'sass:math';
+$color-green: #a3a4e9;
+$color-background-gray: #f4f8f9;
+$color-light-gray: #d0d0ea;
+$color-gray: #8c8c8d;
+
+$style-radius-m: 5px;
+
+// .collection-edit__edit,
+// .collection-list__wrap,
+// .upload-card {
+//   //   background: #f5f6f7;
+// }
+$baseline-px: 25px;
+$baseline-body-size: 16px;
+$baseline: math.div($baseline-px, $baseline-body-size) + rem;
+
+// blockCreator.scss
+$payloadGray: #f3f3f3;
+
+// for > 1440 screen width
+@mixin extra-large {
+  @media (min-width: calc($breakpoint-l-width + 1px)) {
+    @content;
+  }
+}
