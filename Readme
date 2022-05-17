@@ -1,23 +1,29 @@
 This file has the env variables
 
+MAX_LOGIN_ATTEMPTS=5
+LOCK_TIME_MINUTES=10
+RATE_LIMIT_WINDOW_MS=10000
+RATE_LIMIT_MAX=100
+RATE_LIMIT_TRUST_PROXY=true
+
+
 HOSTNAME=localhost
 PORT=3333
-//server connection
-MONGODB_URI=mongodb+srv://staging:w0K3y9S5Y8E2b7e4@db-playy-1db93492.mongo.ondigitalocean.com/staging?authSource=admin&replicaSet=db-playy&readPreference=primary&appname=MongoDB%20Compass&ssl=true&tlsCAFile=E:/development/playy-ca-certificate.crt
+MONGODB_URI=mongodb+srv://staging:w0K3y9S5Y8E2b7e4@db-playy-1db93492.mongo.ondigitalocean.com/staging?authSource=admin&replicaSet=db-playy&readPreference=primary&appname=MongoDB%20Compass&ssl=true&tlsCAFile=/Users/akashreddy/Documents/projects/playy-ca-certificate.crt
 PAYLOAD_SECRET=sdvsdvoubwl.ek fwgv79oiunwe sdvlnisdbctsvc6rqvqwu u ciyrtvc68rvq
 
 
-// digital ocean spaces connection
 
-SPACES_KEY=3HU5RHXKFHTT462FKNNU
-SPACES_SECRET=AS65Zg7S9KpxaFM1ICPSBM7rIN1gA3nOkpdwGzChMZY
+SPACES_KEY=5D55LVLP67MYP6Z3XCJG
+SPACES_SECRET=HfZl8mjShvTGUKFcYcGWQbBmOeqsIPkgIX9tjRStXPU
 SPACES_BUCKET=playy-content
 SPACES_REGION=ams3
 MEDIA_CDN_URL=https://content.playy.media
 PAYLOAD_PUBLIC_SERVER_URL=http://localhost:3333
 
+
 // yarn
 
 Yarn  tin initalize node modules
 
-yarn run 
+yarn run
