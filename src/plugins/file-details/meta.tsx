@@ -1,7 +1,7 @@
 // from src/admin/components/elements/FileDetails/Meta/index.tsx
 
 import React from 'react';
-import { useConfig } from '@payloadcms/config-provider';
+import { useConfig } from 'payload/dist/admin/components/utilities/Config';
 import CopyToClipboard from 'payload/dist/admin/components/elements/CopyToClipboard';
 import formatFilesize from 'payload/dist/uploads/formatFilesize';
 import { Props as OriginalProps } from 'payload/dist/admin/components/elements/FileDetails/Meta/types';
@@ -15,9 +15,7 @@ type Props = OriginalProps & {
 const baseClass = 'file-meta';
 
 const Meta: React.FC<Props> = (props) => {
-  const {
-    filename, filesize, width, height, mimeType, staticURL,
-  } = props;
+  const { filename, filesize, width, height, mimeType, staticURL, url } = props;
 
   const { serverURL } = useConfig();
 

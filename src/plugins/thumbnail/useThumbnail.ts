@@ -1,40 +1,34 @@
 // from src/admin/hooks/useThumbnail.ts
-
-import { useConfig } from '@payloadcms/config-provider';
-import { CollectionConfig } from 'payload/dist/collections/config/types';
+import { useConfig } from 'payload/dist/admin/components/utilities/Config';
+import { SanitizedCollectionConfig } from 'payload/dist/collections/config/types';
 import isImage from 'payload/dist/uploads/isImage';
 import { IncomingUploadType } from 'payload/dist/uploads/types';
-import {isAudio, isVideo} from '../../utils';
+import { isAudio, isVideo } from '../../utils';
 
 const absoluteURLPattern = new RegExp('^(?:[a-z]+:)?//', 'i');
 
 type MediaType = 'image' | 'video' | 'audio';
 
 type UseThumbnail = (
-  collection: CollectionConfig,
+  collection: SanitizedCollectionConfig,
   doc: {
     mimeType: string;
     filename: string;
     sizes: unknown;
   }
-) => false | {
-  src: string;
-  type: MediaType;
-}
+) =>
+  | false
+  | {
+      src: string;
+      type: MediaType;
+    };
 
 const useThumbnail: UseThumbnail = (collection, doc) => {
   const {
-    upload: {
-      staticURL,
-      adminThumbnail,
-    },
+    upload: { staticURL, adminThumbnail },
   } = collection as { upload: IncomingUploadType };
 
-  const {
-    mimeType,
-    sizes,
-    filename,
-  } = doc;
+  const { mimeType, sizes, filename } = doc;
 
   const { serverURL } = useConfig();
 
@@ -52,17 +46,20 @@ const useThumbnail: UseThumbnail = (collection, doc) => {
       const thumbnailURL = adminThumbnail({ doc });
 
       if (absoluteURLPattern.test(thumbnailURL)) {
-        return {src: thumbnailURL, type};
+        return { src: thumbnailURL, type };
       }
 
-      return {src: `${serverURL}${thumbnailURL}`, type};
+      return { src: `${serverURL}${thumbnailURL}`, type };
     }
 
     if (sizes?.[adminThumbnail]?.filename) {
-      return {src: `${serverURL}${staticURL}/${sizes[adminThumbnail].filename}`, type};
+      return {
+        src: `${serverURL}${staticURL}/${sizes[adminThumbnail]?.filename}`,
+        type,
+      };
     }
 
-    return {src: `${serverURL}${staticURL}/${filename}`, type};
+    return { src: `${serverURL}${staticURL}/${filename}`, type };
   }
 
   return false;
