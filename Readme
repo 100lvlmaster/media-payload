@@ -1,4 +1,4 @@
-This file has the env variables
+// copy this to .env file in the root
 
 MAX_LOGIN_ATTEMPTS=5
 LOCK_TIME_MINUTES=10
@@ -24,6 +24,6 @@ PAYLOAD_PUBLIC_SERVER_URL=http://localhost:3333
 
 // yarn
 
-Yarn  tin initalize node modules
+Yarn  to initalize node modules
 
 yarn run
