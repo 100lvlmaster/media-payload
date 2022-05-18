@@ -24,7 +24,7 @@
     "express": "^4.17.1",
     "ffprobe-static": "^3.0.0",
     "fluent-ffmpeg": "^2.1.2",
-    "payload": "^0.16.4",
+    "payload": "^0.15.13",
     "util": "^0.12.4"
   },
   "devDependencies": {
