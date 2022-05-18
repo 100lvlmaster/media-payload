@@ -1,19 +1,19 @@
-import { UploadedFile } from 'express-fileupload';
-import { PayloadRequest } from 'payload/dist/express/types';
-import sharp, { Sharp, OutputInfo } from 'sharp';
-import { getBucketName, getCurrentS3Instance } from '../s3-instance';
-import { MediaDoc } from '../../../types';
-import { isAudio, isImage, isVideo } from '../../../utils';
-import { encode } from 'blurhash';
-import mongoose from 'mongoose';
-import ffmpeg, { FfprobeData } from 'fluent-ffmpeg';
-import { Readable } from 'stream';
+import { encode } from "blurhash";
+import { UploadedFile } from "express-fileupload";
+import ffmpeg, { FfprobeData } from "fluent-ffmpeg";
+import mongoose from "mongoose";
+import { PayloadRequest } from "payload/dist/express/types";
+import sharp, { OutputInfo, Sharp } from "sharp";
+import { Readable } from "stream";
+import { MediaDoc } from "../../../types";
+import { isAudio, isImage, isVideo } from "../../../utils";
+import { getBucketName, getCurrentS3Instance } from "../s3-instance";
 // const FFPROBE_PATH = require('ffmpeg-static').path;
 const ffmpegPath =
-  process.env.FFMPEG_PATH || require('@ffmpeg-installer/ffmpeg').path;
+  process.env.FFMPEG_PATH || require("@ffmpeg-installer/ffmpeg").path;
 ffmpeg.setFfmpegPath(ffmpegPath);
 const FFPROBE_PATH =
-  process.env.FFPROBE_PATH || require('@ffprobe-installer/ffprobe').path;
+  process.env.FFPROBE_PATH || require("@ffprobe-installer/ffprobe").path;
 ffmpeg.setFfprobePath(FFPROBE_PATH);
 console.log(FFPROBE_PATH);
 
@@ -25,8 +25,8 @@ interface PayloadRequestWithFiles extends PayloadRequest {
 }
 
 function isUploadedFile(object: unknown): object is UploadedFile {
-  if (typeof object === 'object') {
-    return 'data' in object;
+  if (typeof object === "object") {
+    return "data" in object;
   }
 
   return false;
@@ -67,7 +67,7 @@ const composeFileName: ComposeFileName = ({
   size,
   extension,
 }) => {
-  const parts = filename.split('.');
+  const parts = filename.split(".");
   if (extension) {
     parts[parts.length - 1] = extension;
   }
@@ -75,13 +75,13 @@ const composeFileName: ComposeFileName = ({
   if (size) {
     parts.splice(-1, 0, size.key, `${size.width}x${size.height}`);
   }
-  return parts.join('.');
+  return parts.join(".");
 };
 
 const getName = (filename: string): string => {
-  const parts = filename.split('.');
+  const parts = filename.split(".");
   parts.splice(-1, 1);
-  return parts.join('.');
+  return parts.join(".");
 };
 
 type UploadToS3 = (args: {
@@ -97,7 +97,7 @@ const uploadToS3: UploadToS3 = async ({
   const s3 = getCurrentS3Instance();
   const Bucket = getBucketName();
   await s3
-    .putObject({ Bucket, Key, Body, ACL: 'public-read', ContentType })
+    .putObject({ Bucket, Key, Body, ACL: "public-read", ContentType })
     .promise();
 };
 
@@ -118,17 +118,17 @@ const processImage: ProcessImage = async ({ data, body, mimeType }) => {
       sizeData.mimeType = mimeType;
       const { width, height, crop } = sizeData;
       const resizedSharpData = await sharpData.resize(width, height, {
-        fit: 'inside' /*position: crop || 'centre'*/,
+        fit: "inside" /*position: crop || 'centre'*/,
       });
       let extension: string;
       let result: { data: Buffer; info: OutputInfo };
 
-      if (key === 'thumbnail') {
-        extension = 'webp';
+      if (key === "thumbnail") {
+        extension = "webp";
         result = await resizedSharpData
           .webp({ quality: 95 })
           .toBuffer({ resolveWithObject: true });
-        sizeData.mimeType = 'image/webp';
+        sizeData.mimeType = "image/webp";
       } else {
         result = await resizedSharpData.toBuffer({ resolveWithObject: true });
       }
@@ -155,7 +155,7 @@ const processImage: ProcessImage = async ({ data, body, mimeType }) => {
 
 const processVideo = async ({ data, body, mimeType }): Promise<void> => {
   const videoParams = await getMetaData(body);
-  const videoStream = videoParams.streams.find((s) => s.codec_type === 'video');
+  const videoStream = videoParams.streams.find((s) => s.codec_type === "video");
   if (videoStream) {
     data.height = videoStream.height;
     data.width = videoStream.width;
@@ -166,7 +166,7 @@ const processVideo = async ({ data, body, mimeType }): Promise<void> => {
 
 const processAudio = async (data: MediaDoc, body: Buffer): Promise<void> => {
   const audioParams = await getMetaData(body);
-  const audioStream = audioParams.streams.find((s) => s.codec_type === 'audio');
+  const audioStream = audioParams.streams.find((s) => s.codec_type === "audio");
   if (audioStream) {
     data.duration = Math.floor(+audioStream.duration);
   }
@@ -177,7 +177,7 @@ const encodeImageToBlurhash = (sharpData: Sharp): Promise<string> =>
     sharpData
       .raw()
       .ensureAlpha()
-      .resize(32, 32, { fit: 'inside' })
+      .resize(32, 32, { fit: "inside" })
       .toBuffer((err, buffer, { width, height }) => {
         if (err) return reject(err);
         resolve(encode(new Uint8ClampedArray(buffer), width, height, 4, 4));
@@ -187,7 +187,7 @@ const encodeImageToBlurhash = (sharpData: Sharp): Promise<string> =>
 type CollectionBeforeChangeHookWithFiles = (args: {
   data: MediaDoc;
   req: PayloadRequestWithFiles;
-  operation: 'create' | 'update';
+  operation: "create" | "update";
   originalDoc?: any;
 }) => any;
 const beforeChangeUploadToS3: CollectionBeforeChangeHookWithFiles = async ({
@@ -236,7 +236,18 @@ const beforeChangeUploadToS3: CollectionBeforeChangeHookWithFiles = async ({
       mimeType: mimeType,
     });
   }
+
   delete data.dimensions;
+  /// Filename is unique in MongoDb
+  const thumbnailWithFileName = {
+    filename: `${data.name}-${new Date().toISOString()}.thumbnail.180x180.webp`,
+  };
+  data.sizes = {
+    thumbnail: {
+      ...(thumbnailWithFileName as any),
+    },
+  };
+  console.log(data);
   return data;
 };
 
